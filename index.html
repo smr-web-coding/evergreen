@@ -5,19 +5,71 @@
 <title>Evergreen Calculator Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Stylish Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
+*{box-sizing:border-box}
+
+/* ===== BODY ===== */
 body{
     margin:0;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family:'Poppins', sans-serif;
     background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
     color:#fff;
     min-height:100vh;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.nav-logo{
+    font-weight:600;
+    font-size:18px;
+    letter-spacing:1px;
+    text-shadow:0 0 8px #00ffcc;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-links a{
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
+.nav-links a:hover{
+    color:#00ffcc;
+}
+
+/* Hamburger */
+.menu-toggle{
+    display:none;
+    font-size:24px;
+    cursor:pointer;
+}
+
+/* ===== DASHBOARD ===== */
+.wrapper{
+    min-height:calc(100vh - 60px);
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
-/* Container */
 .dashboard{
     width:95%;
     max-width:900px;
@@ -44,9 +96,9 @@ body{
 /* Title */
 h1{
     margin:10px 0 30px;
-    font-weight:600;
+    font-weight:500;
     letter-spacing:1px;
-    text-shadow:0 0 10px #00ffcc;
+    text-shadow:0 0 12px #00ffcc;
 }
 
 /* Cards Grid */
@@ -59,7 +111,7 @@ h1{
 /* Card */
 .card{
     background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(0,0,0,0.3));
-    border-radius:16px;
+    border-radius:18px;
     padding:30px 20px;
     text-decoration:none;
     color:#fff;
@@ -67,21 +119,21 @@ h1{
         0 10px 30px rgba(0,0,0,0.6),
         inset 0 0 15px rgba(0,255,204,0.2);
     transition: all 0.4s ease;
-    transform-style: preserve-3d;
 }
 
-/* Hover Neon 3D Effect */
+/* Hover */
 .card:hover{
-    transform: translateY(-12px) scale(1.03);
+    transform: translateY(-12px) scale(1.04);
     box-shadow:
-        0 20px 50px rgba(0,255,204,0.7),
+        0 25px 55px rgba(0,255,204,0.7),
         inset 0 0 25px rgba(0,255,204,0.4);
 }
 
 /* Card Title */
 .card h3{
-    margin:0 0 10px;
+    margin:0 0 8px;
     font-size:20px;
+    font-weight:500;
     text-shadow:0 0 8px #00ffcc;
 }
 
@@ -97,11 +149,44 @@ h1{
     font-size:13px;
     opacity:0.7;
 }
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+    .nav-links{
+        position:absolute;
+        top:60px;
+        right:20px;
+        background:rgba(0,0,0,0.6);
+        flex-direction:column;
+        padding:15px;
+        border-radius:10px;
+        display:none;
+    }
+    .nav-links.show{
+        display:flex;
+    }
+    .menu-toggle{
+        display:block;
+    }
+}
 </style>
 </head>
 
 <body>
 
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-logo">EVERGREEN</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="navLinks">
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Trades</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
+
+<div class="wrapper">
 <div class="dashboard">
 
     <!-- Logo -->
@@ -111,28 +196,27 @@ h1{
 
     <h1>Evergreen Calculator Dashboard</h1>
 
-    <!-- Project Links -->
+    <!-- Cards -->
     <div class="cards">
 
         <a href="https://smr-web-coding.github.io/evergreen-credit-cal/" class="card" target="_blank">
             <h3>TDS Balance Calculator</h3>
-            <p>Variable lot, KG & GST calculation</p>
+            <p>Instant TDS, received & balance calculation</p>
         </a>
 
         <a href="lotcalulator.html" class="card" target="_blank">
             <h3>LOT Invoice Calculator</h3>
-            <p>Taxable value, GST & invoice total</p>
+            <p>Auto GST, taxable value & invoice total</p>
         </a>
 
         <a href="https://smr-web-coding.github.io/jai-mahakal/" class="card" target="_blank">
             <h3>Digital LR / Bilty</h3>
-            <p>Received, balance & TDS logic</p>
+            <p>Instant LR creation & printing</p>
         </a>
 
-        <!-- Optional 4th Card -->
         <a href="#" class="card">
             <h3>Coming Soon</h3>
-            <p>More Evergreen tools</p>
+            <p>More Evergreen business tools</p>
         </a>
 
     </div>
@@ -142,9 +226,13 @@ h1{
     </div>
 
 </div>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
 
 </body>
-
 </html>
-
-
