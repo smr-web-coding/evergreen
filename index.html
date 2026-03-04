@@ -169,6 +169,82 @@ h1{
         display:block;
     }
 }
+
+    .scrap-3d-container{
+    perspective: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+.scrap-3d-text{
+    position: relative;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    transform-style: preserve-3d;
+    animation: float3d 4s ease-in-out infinite;
+    box-shadow:
+        0 0 15px #00ffcc,
+        0 0 30px rgba(0,255,204,0.6);
+    overflow: hidden;
+}
+
+.scrap-3d-text span{
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ffcc;
+    text-shadow:
+        0 0 5px #00ffcc,
+        0 0 10px #00ffaa;
+    display: block;
+}
+
+.scrap-3d-text small{
+    font-size: 12px;
+    color: #aaffee;
+    letter-spacing: 1px;
+}
+
+/* Moving Neon Light */
+.scrap-3d-text::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:60%;
+    height:100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,255,204,0.7),
+        transparent
+    );
+    animation: neonSweep 3s linear infinite;
+}
+
+/* 3D floating effect */
+@keyframes float3d{
+    0%,100%{
+        transform: rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+    50%{
+        transform: rotateX(6deg) rotateY(-6deg) translateZ(20px);
+    }
+}
+
+/* Neon moving light */
+@keyframes neonSweep{
+    0%{ left:-100%; }
+    100%{ left:150%; }
+}
+
+/* Mobile responsive */
+@media(max-width:600px){
+    .scrap-3d-text span{ font-size:15px; }
+    .scrap-3d-text small{ font-size:11px; }
+}
 </style>
 </head>
 
@@ -185,7 +261,12 @@ h1{
         <a href="#">Contact</a>
     </div>
 </div>
-
+ <div class="scrap-3d-container">
+  <div class="scrap-3d-text">
+    <span>♻ WASTE RECYCLING PLANT</span>
+    <small>Authorized E-Waste Battery & Plastic Recycling Unit</small>
+  </div>
+</div>
 <div class="wrapper">
 <div class="dashboard">
 
@@ -236,3 +317,4 @@ function toggleMenu(){
 
 </body>
 </html>
+
