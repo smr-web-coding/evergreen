@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ACSR Aluminum Rate Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  color:#fff;
+}
+
+.calculator{
+  background: rgba(0,0,0,0.75);
+  padding:25px;
+  border-radius:15px;
+  width:100%;
+  max-width:440px;
+  box-shadow: 0 0 25px rgba(0,255,200,0.4);
+}
+
+h2{
+  text-align:center;
+  color:#00ffcc;
+  margin-bottom:20px;
+}
+
+label{
+  font-size:14px;
+  margin-top:12px;
+  display:block;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  margin-top:5px;
+  font-size:15px;
+}
+
+.result{
+  margin-top:20px;
+  background: rgba(255,255,255,0.08);
+  padding:15px;
+  border-radius:10px;
+}
+
+.result p{
+  margin:8px 0;
+}
+
+.highlight{
+  color:#00ffcc;
+  font-size:17px;
+}
+
+.margin{
+  color:#ffdd55;
+  font-size:14px;
+  margin-left:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+  <h2>♻ ACSR Aluminum Rate Calculator</h2>
+
+  <label>1 MT Purchase Price (₹)</label>
+  <input type="number" id="purchase" value="190000">
+
+  <label>Iron Percentage (%)</label>
+  <input type="number" id="ironPercent" value="30">
+
+  <label>Iron Selling Rate (₹ / KG)</label>
+  <input type="number" id="ironRate" value="30">
+
+  <label>Profit Margin (%)</label>
+  <input type="number" id="profit" value="0">
+
+  <div class="result">
+    <p><strong>Iron Quantity:</strong> <span id="ironQty">0</span> KG</p>
+    <p><strong>Iron Sale Value:</strong> ₹<span id="ironValue">0</span></p>
+    <p><strong>Aluminum Quantity:</strong> <span id="alQty">0</span> KG</p>
+    <p><strong>Net Aluminum Cost:</strong> ₹<span id="alCost">0</span></p>
+
+    <p class="highlight">
+      <strong>Final Aluminum Selling Rate:</strong>
+      ₹<span id="alRate">0</span> / KG
+      <span class="margin">
+        (+₹<span id="marginAmt">0</span>)
+      </span>
+    </p>
+  </div>
+</div>
+
+<script>
+const inputs = document.querySelectorAll("input");
+inputs.forEach(input => input.addEventListener("input", calculate));
+
+function calculate(){
+  const purchase = Number(document.getElementById('purchase').value) || 0;
+  const ironPercent = Number(document.getElementById('ironPercent').value) || 0;
+  const ironRate = Number(document.getElementById('ironRate').value) || 0;
+  const profit = Number(document.getElementById('profit').value) || 0;
+
+  const totalWeight = 1000;
+
+  const ironQty = totalWeight * ironPercent / 100;
+  const ironValue = ironQty * ironRate;
+  const aluminumQty = totalWeight - ironQty;
+
+  if(aluminumQty <= 0){
+    document.getElementById('alRate').innerText = "0";
+    document.getElementById('marginAmt').innerText = "0";
+    return;
+  }
+
+  const aluminumCost = purchase - ironValue;
+  const baseRate = aluminumCost / aluminumQty;
+  const finalRate = baseRate * (1 + profit / 100);
+  const marginPerKg = finalRate - baseRate;
+
+  document.getElementById('ironQty').innerText = ironQty.toFixed(0);
+  document.getElementById('ironValue').innerText = ironValue.toFixed(0);
+  document.getElementById('alQty').innerText = aluminumQty.toFixed(0);
+  document.getElementById('alCost').innerText = aluminumCost.toFixed(0);
+  document.getElementById('alRate').innerText = finalRate.toFixed(2);
+  document.getElementById('marginAmt').innerText = marginPerKg.toFixed(2);
+}
+
+calculate();
+</script>
+
+</body>
+</html>
