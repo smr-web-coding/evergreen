@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Evergreen Lot Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eafff7, #f4f9ff);
+    padding:20px;
+}
+
+/* ===== MAIN CARD ===== */
+.container{
+    max-width:420px;
+    margin:auto;
+    background: linear-gradient(145deg, #ffffff, #f1fff9);
+    padding:22px;
+    border-radius:18px;
+    box-shadow:
+        0 15px 35px rgba(0,170,132,0.25),
+        inset 0 0 20px rgba(0,255,204,0.15);
+    transition: all 0.4s ease;
+}
+.container:hover{
+    box-shadow:
+        0 20px 45px rgba(0,170,132,0.45),
+        inset 0 0 30px rgba(0,255,204,0.25);
+}
+
+/* ===== LOGO ===== */
+.logo{
+    display:flex;
+    justify-content:center;
+    margin-bottom:8px;
+}
+.logo img{
+    width:70px;
+    height:70px;
+    animation: float 3s ease-in-out infinite;
+}
+@keyframes float{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-6px)}
+    100%{transform:translateY(0)}
+}
+
+/* ===== TITLE ===== */
+h2{
+    text-align:center;
+    margin:10px 0 20px;
+    color:#0aa84f;
+    text-shadow:0 0 8px rgba(10,168,79,0.5);
+}
+
+/* ===== FORM ===== */
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:14px;
+    color:#044c2c;
+}
+input, select{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    font-size:16px;
+    border-radius:8px;
+    border:1px solid #cceee0;
+    outline:none;
+    transition:0.3s;
+}
+input:focus, select:focus{
+    border-color:#0aa84f;
+    box-shadow:0 0 10px rgba(10,168,79,0.4);
+}
+
+/* ===== RESULT BOX ===== */
+.result{
+    background: linear-gradient(135deg, #f7fff3, #e9fff6);
+    padding:10px;
+    margin-top:10px;
+    font-weight:bold;
+    border-radius:8px;
+    border-left:4px solid #0aa84f;
+}
+
+/* ===== TOTAL ===== */
+.total{
+    background: linear-gradient(135deg, #0aa84f, #00ffb3);
+    color:#fff;
+    padding:14px;
+    text-align:center;
+    font-size:18px;
+    margin-top:18px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,255,204,0.7);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <img src="logo.png" alt="Evergreen Logo">
+    </div>
+
+    <h2>Evergreen Lot Calculator</h2>
+
+    <label>No. of Lots</label>
+    <input type="number" id="lots" placeholder="Enter lots" oninput="calculate()">
+
+    <label>KG per Lot</label>
+    <input type="number" id="kgPerLot" placeholder="Enter KG per lot" oninput="calculate()">
+
+    <label>Rate per Lot (₹)</label>
+    <input type="number" id="ratePerLot" placeholder="Enter rate per lot" oninput="calculate()">
+
+    <label>GST Rate</label>
+    <select id="gst" onchange="calculate()">
+        <option value="5">5%</option>
+        <option value="12">12%</option>
+        <option value="18" selected>18%</option>
+        <option value="28">28%</option>
+    </select>
+
+    <div class="result">Total KG: <span id="totalKg">0</span></div>
+    <div class="result">Rate per KG: ₹ <span id="rateKg">0</span></div>
+    <div class="result">Taxable Value: ₹ <span id="taxable">0</span></div>
+    <div class="result">GST Amount: ₹ <span id="gstAmt">0</span></div>
+
+    <div class="total">Invoice Total: ₹ <span id="invoice">0</span></div>
+
+</div>
+
+<script>
+function calculate(){
+    let lots = Number(document.getElementById("lots").value);
+    let kgPerLot = Number(document.getElementById("kgPerLot").value);
+    let ratePerLot = Number(document.getElementById("ratePerLot").value);
+    let gstRate = Number(document.getElementById("gst").value);
+
+    let totalKg = lots * kgPerLot;
+    let taxable = lots * ratePerLot;
+    let ratePerKg = totalKg ? taxable / totalKg : 0;
+
+    let gstAmount = taxable * gstRate / 100;
+    let invoiceTotal = taxable + gstAmount;
+
+    document.getElementById("totalKg").innerText = totalKg.toFixed(2);
+    document.getElementById("rateKg").innerText = ratePerKg.toFixed(2);
+    document.getElementById("taxable").innerText = taxable.toFixed(2);
+    document.getElementById("gstAmt").innerText = gstAmount.toFixed(2);
+    document.getElementById("invoice").innerText = invoiceTotal.toFixed(2);
+}
+</script>
+
+</body>
+</html>
