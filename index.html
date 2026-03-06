@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Evergreen Calculator Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Stylish Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+
+/* ===== BODY ===== */
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+    color:#fff;
+    min-height:100vh;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.nav-logo{
+    font-weight:600;
+    font-size:18px;
+    letter-spacing:1px;
+    text-shadow:0 0 8px #00ffcc;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-links a{
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
+.nav-links a:hover{
+    color:#00ffcc;
+}
+
+/* Hamburger */
+.menu-toggle{
+    display:none;
+    font-size:24px;
+    cursor:pointer;
+}
+
+/* ===== DASHBOARD ===== */
+.wrapper{
+    min-height:calc(50vh - 60px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.dashboard{
+    width:95%;
+    max-width:900px;
+    text-align:center;
+}
+
+/* Logo */
+.logo{
+    display:flex;
+    justify-content:center;
+  
+}
+.logo img{
+    width:90px;
+    height:90px;
+    animation: float 3s ease-in-out infinite;
+}
+@keyframes float{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+    100%{transform:translateY(0)}
+}
+
+/* Title */
+h1{
+    margin:10px 0 30px;
+    font-weight:500;
+    letter-spacing:1px;
+    text-shadow:0 0 12px #00ffcc;
+}
+
+/* Cards Grid */
+.cards{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap:20px;
+}
+
+/* Card */
+.card{
+    background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(0,0,0,0.3));
+    border-radius:18px;
+    padding:30px 20px;
+    text-decoration:none;
+    color:#fff;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.6),
+        inset 0 0 15px rgba(0,255,204,0.2);
+    transition: all 0.4s ease;
+}
+
+/* Hover */
+.card:hover{
+    transform: translateY(-12px) scale(1.04);
+    box-shadow:
+        0 25px 55px rgba(0,255,204,0.7),
+        inset 0 0 25px rgba(0,255,204,0.4);
+}
+
+/* Card Title */
+.card h3{
+    margin:0 0 8px;
+    font-size:20px;
+    font-weight:500;
+    text-shadow:0 0 8px #00ffcc;
+}
+
+/* Card Text */
+.card p{
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* Footer */
+.footer{
+    margin-top:30px;
+    font-size:13px;
+    opacity:0.7;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+    .nav-links{
+        position:absolute;
+        top:60px;
+        right:20px;
+        background:rgba(0,0,0,0.6);
+        flex-direction:column;
+        padding:15px;
+        border-radius:10px;
+        display:none;
+    }
+    .nav-links.show{
+        display:flex;
+    }
+    .menu-toggle{
+        display:block;
+    }
+}
+
+    .scrap-3d-container{
+    perspective: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+.scrap-3d-text{
+    position: relative;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    transform-style: preserve-3d;
+    animation: float3d 4s ease-in-out infinite;
+    box-shadow:
+        0 0 15px #00ffcc,
+        0 0 30px rgba(0,255,204,0.6);
+    overflow: hidden;
+}
+
+.scrap-3d-text span{
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ffcc;
+    text-shadow:
+        0 0 5px #00ffcc,
+        0 0 10px #00ffaa;
+    display: block;
+}
+
+.scrap-3d-text small{
+    font-size: 12px;
+    color: #aaffee;
+    letter-spacing: 1px;
+}
+
+/* Moving Neon Light */
+.scrap-3d-text::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:60%;
+    height:100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,255,204,0.7),
+        transparent
+    );
+    animation: neonSweep 3s linear infinite;
+}
+
+/* 3D floating effect */
+@keyframes float3d{
+    0%,100%{
+        transform: rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+    50%{
+        transform: rotateX(6deg) rotateY(-6deg) translateZ(20px);
+    }
+}
+
+/* Neon moving light */
+@keyframes neonSweep{
+    0%{ left:-100%; }
+    100%{ left:150%; }
+}
+
+/* Mobile responsive */
+@media(max-width:600px){
+    .scrap-3d-text span{ font-size:15px; }
+    .scrap-3d-text small{ font-size:11px; }
+}
+
+    /* ===== NEON LINK ICON ===== */
+.neon-link-wrap{
+    width:100%;
+    text-align:center;
+    margin:18px 0;
+}
+
+.neon-link{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 26px;
+    border-radius:30px;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:500;
+    color:#00ffcc;
+    border:2px solid #00ffcc;
+    box-shadow:0 0 15px rgba(0,255,204,0.6);
+    position:relative;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+/* Moving neon light */
+.neon-link::before{
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-30%;
+    width:60%;
+    height:200%;
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,255,204,0.6),
+        transparent
+    );
+    transform:rotate(25deg);
+    animation: neonMove 2.5s linear infinite;
+}
+
+@keyframes neonMove{
+    0%{left:-40%;}
+    100%{left:140%;}
+}
+
+/* Icon animation */
+.link-icon{
+    font-size:18px;
+    animation: iconPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes iconPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.25);}
+}
+
+/* Hover */
+.neon-link:hover{
+    background:#00ffcc;
+    color:#003333;
+    box-shadow:
+        0 0 25px rgba(0,255,204,0.9),
+        0 0 45px rgba(0,255,204,0.6);
+}
+
+/* ===== PASSWORD OVERLAY ===== */
+.password-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.password-box{
+    background:#000;
+    border-radius:15px;
+    padding:25px 20px;
+    width:90%;
+    max-width:320px;
+    text-align:center;
+    box-shadow:
+        0 0 20px #00ffcc,
+        0 0 50px rgba(0,255,204,0.6);
+}
+
+.password-box h3{
+    margin-bottom:15px;
+    color:#00ffcc;
+    text-shadow:0 0 10px #00ffcc;
+}
+
+.password-box input{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+    text-align:center;
+}
+
+.password-actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.password-actions button{
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    background:#00ffcc;
+    color:#003333;
+}
+
+.password-actions .cancel{
+    background:#333;
+    color:#fff;
+}
+
+#errorText{
+    margin-top:10px;
+    color:#ff5c5c;
+    display:none;
+    font-size:13px;
+}
+
+</style>
+</head>
+<!-- Password Overlay -->
+<div id="passwordOverlay" class="password-overlay">
+    <div class="password-box">
+        <h3>🔒 Enter Access Password</h3>
+        <input type="password" id="lrPassword" placeholder="Enter password">
+        <div class="password-actions">
+            <button onclick="checkPassword()">Unlock</button>
+            <button class="cancel" onclick="closePasswordModal()">Cancel</button>
+        </div>
+        <p id="errorText">❌ Incorrect Password</p>
+    </div>
+</div>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-logo">EVERGREEN</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="navLinks">
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Trades</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
+
+ <!-- Logo -->
+    <div style="margin-top: 25px;" class="logo">
+        <img src="logo.png" alt="Evergreen Logo">
+    </div>
+
+    
+ <div class="scrap-3d-container">
+  <div  class="scrap-3d-text">
+    <span style="margin-left: 50px;">♻ WASTE RECYCLING PLANT</span>
+    <small>Authorized E-Waste Battery & Plastic Recycling Unit</small>
+  </div>
+</div>
+    <div class="neon-link-wrap">
+    <a href="https://evergreen.indiawms.in/" target="_blank" class="neon-link">
+        <span class="link-icon">🔗</span>
+        <span class="link-text">Visit Evergreen Website</span>
+    </a>
+</div>
+<div class="wrapper">
+<div class="dashboard">
+
+   
+
+    <h1>Evergreen Dashboard</h1>
+
+    <!-- Cards -->
+    <div class="cards">
+
+        <a href="https://smr-web-coding.github.io/evergreen-credit-cal/" class="card" target="_blank">
+            <h3>TDS Balance Calculator</h3>
+            <p>Instant TDS, received & balance calculation</p>
+        </a>
+
+        <a href="lotcalulator.html" class="card" target="_blank">
+            <h3>LOT Invoice Calculator</h3>
+            <p>Auto GST, taxable value & invoice total</p>
+        </a>
+
+        <a href="javascript:void(0)" class="card" onclick="openPasswordModal()">
+    <h3>Digital LR / Bilty</h3>
+    <p>Instant LR creation & printing</p>
+</a>
+
+        <a href="acsr.html" class="card">
+            <h3>ACSR Aluminium Rate Cal</h3>
+            <p>Calculate Aluminium rate after separating Iron from ACSR</p>
+        </a>
+         <a href="#" class="card">
+            <h3>Coming Soon</h3>
+            <p>More Evergreen business tools</p>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        © Evergreen E-Waste Recycling Management
+    </div>
+
+</div>
+</div>
+<script>
+const LR_PASSWORD = "738073";
+const LR_LINK = "https://smr-web-coding.github.io/jai-mahakal/";
+
+function openPasswordModal(){
+    document.getElementById("passwordOverlay").style.display = "flex";
+    document.getElementById("lrPassword").value = "";
+    document.getElementById("errorText").style.display = "none";
+}
+
+function closePasswordModal(){
+    document.getElementById("passwordOverlay").style.display = "none";
+}
+
+function checkPassword(){
+    const entered = document.getElementById("lrPassword").value;
+    if(entered === LR_PASSWORD){
+        window.location.href = LR_LINK;
+    }else{
+        document.getElementById("errorText").style.display = "block";
+    }
+}
+</script>
+<script>
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
