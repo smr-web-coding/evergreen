@@ -79,18 +79,6 @@
       text-shadow: 0 0 12px rgba(122, 0, 255, 0.8);
     }
 
-    .menu-toggle {
-      display: none;
-      border: 1px solid rgba(122, 0, 255, 0.7);
-      background: rgba(122, 0, 255, 0.12);
-      color: #fff;
-      border-radius: 10px;
-      padding: 8px 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-
     .menu {
       list-style: none;
       display: flex;
@@ -146,47 +134,6 @@
       background: rgba(0, 60, 255, 0.2);
       bottom: -80px;
       right: -100px;
-    }
-
-    .hero-banner {
-      margin: 0 auto 28px;
-      max-width: 620px;
-      padding: 14px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(130, 60, 255, 0.7);
-      background: rgba(48, 13, 86, 0.38);
-      box-shadow: 0 0 22px rgba(122, 0, 255, 0.42);
-      position: relative;
-      overflow: hidden;
-      animation: bannerFloat 3.8s ease-in-out infinite;
-    }
-
-    .hero-banner::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      transform: translateX(-120%);
-      background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,0.3), transparent 85%);
-      animation: bannerSweep 3.4s linear infinite;
-    }
-
-    .hero-banner span {
-      position: relative;
-      z-index: 1;
-      display: inline-block;
-      font-size: 0.92rem;
-      color: #f3e9ff;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    @keyframes bannerSweep {
-      to { transform: translateX(120%); }
-    }
-
-    @keyframes bannerFloat {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
     }
 
     .hero h1 {
@@ -394,43 +341,8 @@
     }
 
     @media (max-width: 860px) {
-      .nav-inner {
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      .menu-toggle { display: inline-flex; }
-
-      .menu {
-        width: 100%;
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        pointer-events: none;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        background: rgba(11, 2, 28, 0.95);
-        border: 1px solid rgba(122, 0, 255, 0.45);
-        border-radius: 12px;
-        padding: 0 12px;
-        transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
-      }
-
-      .menu.menu-open {
-        max-height: 420px;
-        opacity: 1;
-        pointer-events: auto;
-        padding: 12px;
-      }
-
-      .menu a {
-        display: block;
-        width: 100%;
-        border-radius: 10px;
-        padding: 10px 12px;
-      }
-
+      .nav-inner { flex-direction: column; }
+      .menu { justify-content: center; }
       section { padding: 62px 0; }
     }
   </style>
@@ -439,8 +351,7 @@
   <header class="navbar">
     <div class="container nav-inner">
       <div class="brand">Evergreen E-Waste Recycling</div>
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mainMenu">☰</button>
-      <ul class="menu" id="mainMenu">
+      <ul class="menu">
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
@@ -456,7 +367,6 @@
   <main>
     <section class="hero" id="home">
       <div class="container">
-        <div class="hero-banner"><span>Authorized E-Waste • Battery • Plastic Recycling Unit</span></div>
         <h1>Evergreen E-Waste Recycling</h1>
         <p>Transforming Waste Into Valuable Resources</p>
         <div class="hero-actions">
@@ -618,26 +528,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-
-    const menuToggle = document.getElementById('menuToggle');
-    const mainMenu = document.getElementById('mainMenu');
-
-    menuToggle.addEventListener('click', () => {
-      const isOpen = mainMenu.classList.toggle('menu-open');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.textContent = isOpen ? '✕' : '☰';
-    });
-
-    mainMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 860) {
-          mainMenu.classList.remove('menu-open');
-          menuToggle.setAttribute('aria-expanded', 'false');
-          menuToggle.textContent = '☰';
-        }
-      });
-    });
-
     new Swiper('.client-swiper', {
       loop: true,
       speed: 1800,
