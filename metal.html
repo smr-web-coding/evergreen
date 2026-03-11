@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Evergreen Recovery Calculator</title>
+
+<style>
+/* LABEL */
+
+label{
+display:block;
+margin-top:18px;
+font-size:14px;
+letter-spacing:0.5px;
+color:#9fffd6;
+}
+
+/* INPUT FIELD */
+
+#qty{
+
+width:100%;
+padding:14px 16px;
+border-radius:10px;
+
+background:linear-gradient(145deg,#0f2e2a,#0a1f1c);
+
+border:1px solid rgba(0,255,170,0.25);
+
+color:#e8fff8;
+font-size:16px;
+
+box-shadow:
+inset 0 2px 6px rgba(0,0,0,0.7),
+0 0 8px rgba(0,255,170,0.05);
+
+transition:all .25s ease;
+
+}
+
+
+/* INPUT FOCUS */
+
+#qty:focus{
+
+outline:none;
+
+border:1px solid #00ffb3;
+
+box-shadow:
+0 0 10px rgba(0,255,170,0.5),
+inset 0 2px 6px rgba(0,0,0,0.7);
+
+background:linear-gradient(145deg,#123b35,#0b2723);
+
+}
+
+
+/* DROPDOWN */
+
+#code{
+
+width:100%;
+padding:14px 16px;
+border-radius:10px;
+
+background:linear-gradient(145deg,#0f2e2a,#0a1f1c);
+
+border:1px solid rgba(0,255,170,0.25);
+
+color:#e8fff8;
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:
+inset 0 2px 6px rgba(0,0,0,0.7),
+0 0 8px rgba(0,255,170,0.05);
+
+transition:all .25s ease;
+
+}
+
+
+/* DROPDOWN HOVER */
+
+#code:hover{
+
+border:1px solid #00ffb3;
+
+box-shadow:
+0 0 12px rgba(0,255,170,0.4);
+
+}
+
+
+/* DROPDOWN FOCUS */
+
+#code:focus{
+
+outline:none;
+
+border:1px solid #00ffb3;
+
+box-shadow:
+0 0 10px rgba(0,255,170,0.5),
+inset 0 2px 6px rgba(0,0,0,0.7);
+
+}
+
+
+/* OPTION STYLE */
+
+#code option{
+
+background:#0b1c1a;
+color:#c7ffe9;
+
+}
+
+.container{
+
+background:linear-gradient(135deg,#071b18,#0d2e29);
+
+padding:40px;
+
+border-radius:16px;
+
+box-shadow:
+0 0 40px rgba(0,255,170,0.08),
+inset 0 0 20px rgba(0,0,0,0.5);
+
+border:1px solid rgba(0,255,170,0.15);
+
+}
+body{
+background:#0b1c1a;
+font-family:Arial;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+
+width:650px;
+background:#0f2a26;
+padding:35px;
+border-radius:12px;
+box-shadow:0 0 25px rgba(0,255,156,0.25);
+
+}
+
+h2{
+text-align:center;
+color:#00ff9c;
+margin-bottom:25px;
+}
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:6px;
+border:none;
+font-size:16px;
+
+}
+
+.item{
+
+margin-top:12px;
+color:#7df7d3;
+
+}
+
+/* RESULT TABLE */
+
+.resultTable{
+
+margin-top:25px;
+width:100%;
+border-collapse:collapse;
+
+}
+
+.resultTable th{
+
+text-align:left;
+padding:10px;
+color:#00ff9c;
+font-weight:600;
+
+}
+
+.resultTable td{
+
+padding:10px;
+border-top:1px solid rgba(255,255,255,0.08);
+
+}
+
+/* percentage */
+
+.percent{
+
+color:#9cebd3;
+
+}
+
+/* MT badge */
+
+.mt{
+
+background:#143f38;
+padding:4px 10px;
+border-radius:6px;
+color:#9efbd7;
+
+}
+
+/* KG highlight */
+
+.kg{
+
+background:#00ff9c;
+color:black;
+padding:4px 10px;
+border-radius:6px;
+font-weight:600;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Metal Recovery Calculator</h2>
+
+<div class="input-section">
+
+<label class="form-label">Enter Quantity (Metric Ton)</label>
+
+<input 
+type="number"
+id="qty"
+class="input-3d"
+placeholder="Enter MT"
+oninput="calculate()"
+>
+
+<label class="form-label">Select Equipment Code</label>
+
+<select 
+id="code"
+class="select-3d"
+onchange="showItem();calculate();"
+>
+
+<option value="">Select Code</option>
+
+</select>
+
+</div>
+
+<div class="item" id="itemName"></div>
+
+
+<table class="resultTable">
+
+<thead>
+
+<tr>
+
+<th>Metal</th>
+<th>Recovery %</th>
+<th>MT</th>
+<th>KG</th>
+
+</tr>
+
+</thead>
+
+<tbody id="result">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const data = {
+
+ITEW1:{name:"Centralized data processing: Mainframes, Minicomputers",Au:0.0008,Cu:4.5,Fe:30,Al:3},
+ITEW2:{name:"Personal Computers (CPU with I/O devices)",Au:0.0004,Cu:1.2,Fe:35,Al:3},
+ITEW3:{name:"Laptop Computers",Au:0.0004,Cu:0.19,Fe:5,Al:11},
+ITEW4:{name:"Notebook Computers",Au:0.0004,Cu:0.19,Fe:5,Al:7.5},
+ITEW5:{name:"Notepad Computers",Au:0.0004,Cu:0.04,Fe:0,Al:4.71},
+ITEW6:{name:"Printers including cartridges",Au:0,Cu:0.01,Fe:10,Al:1.25},
+ITEW7:{name:"Copying Equipment",Au:0,Cu:0.1,Fe:20,Al:1.15},
+ITEW8:{name:"Electronic Typewriters",Au:0,Cu:1.5,Fe:45,Al:0},
+ITEW9:{name:"User terminal systems",Au:0,Cu:1.5,Fe:45,Al:0},
+ITEW10:{name:"Facsimile",Au:0,Cu:0.01,Fe:16,Al:1.4},
+ITEW11:{name:"Telex",Au:0,Cu:0.45,Fe:25,Al:1.25},
+ITEW12:{name:"Telephones",Au:0,Cu:0.55,Fe:0,Al:0},
+ITEW13:{name:"Pay telephones",Au:0,Cu:0.5,Fe:25,Al:0},
+ITEW14:{name:"Cordless telephones",Au:0,Cu:2,Fe:5,Al:0},
+ITEW15_FP:{name:"Cellular telephones (Feature phone)",Au:0.0015,Cu:0.85,Fe:17.02,Al:0},
+ITEW15_SP:{name:"Cellular telephones (Smart phone)",Au:0.00157,Cu:3,Fe:3,Al:7.97},
+ITEW16:{name:"Answering System",Au:0,Cu:1.75,Fe:85,Al:0},
+ITEW17:{name:"Telecommunication transmitting equipment",Au:0,Cu:0,Fe:0,Al:0},
+ITEW18:{name:"BTS components",Au:0.0035,Cu:11,Fe:27.5,Al:0},
+ITEW19:{name:"Tablets / iPad",Au:0.0004,Cu:3.5,Fe:40,Al:0},
+ITEW20:{name:"Phablets",Au:0.00045,Cu:5.5,Fe:40,Al:0},
+ITEW21:{name:"Scanners",Au:0,Cu:0.01,Fe:16.01,Al:0},
+ITEW22:{name:"Routers / LAN Switch / Access Points",Au:0,Cu:3,Fe:0,Al:0},
+ITEW23:{name:"GPS",Au:0,Cu:4.5,Fe:0,Al:0},
+ITEW24:{name:"UPS",Au:0,Cu:11,Fe:0,Al:0},
+ITEW25:{name:"Inverter",Au:0,Cu:11,Fe:0,Al:0},
+ITEW26:{name:"Modems",Au:0,Cu:8.5,Fe:0,Al:0},
+ITEW27:{name:"Electronic data storage devices",Au:0,Cu:3,Fe:0,Al:0},
+
+CEEW1:{name:"Television sets",Au:0.00012,Cu:0.5,Fe:27.1,Al:0},
+CEEW2:{name:"Refrigerator",Au:0,Cu:0.76,Fe:24.21,Al:4},
+CEEW3:{name:"Washing Machine",Au:0,Cu:0.73,Fe:30,Al:3},
+CEEW4:{name:"Air Conditioners",Au:0,Cu:7.5,Fe:45,Al:8.4},
+CEEW5:{name:"Mercury containing lamps",Au:0,Cu:0,Fe:1,Al:1},
+CEEW6:{name:"Electronic display panels / monitors",Au:0.0004,Cu:0.15,Fe:24,Al:0},
+CEEW7:{name:"Radio sets",Au:0,Cu:2.5,Fe:7,Al:0},
+CEEW8:{name:"Set top boxes",Au:0,Cu:0.5,Fe:28.7,Al:0},
+CEEW9:{name:"Video Cameras",Au:0,Cu:0.1,Fe:3,Al:0},
+CEEW10:{name:"Video Recorder",Au:0,Cu:0.2,Fe:12.3,Al:0},
+CEEW11:{name:"Hi-Fi Recorder",Au:0,Cu:1.5,Fe:25,Al:0},
+CEEW12:{name:"Audio Amplifiers",Au:0,Cu:4.5,Fe:42.6,Al:4.3},
+CEEW13:{name:"Audio/Video distribution equipment",Au:0,Cu:0.1,Fe:12.9,Al:4.8},
+CEEW14:{name:"Solar panels",Au:0,Cu:0,Fe:1,Al:13},
+CEEW15:{name:"Luminaires",Au:0,Cu:0.5,Fe:9,Al:13.5},
+CEEW16:{name:"High intensity discharge lamps",Au:0,Cu:0,Fe:8,Al:9},
+CEEW17:{name:"Low pressure sodium lamps",Au:0,Cu:0,Fe:11,Al:3},
+CEEW18:{name:"Lighting control equipment",Au:0,Cu:0,Fe:11,Al:3},
+CEEW19:{name:"Digital camera",Au:0,Cu:0.1,Fe:0,Al:6.3},
+
+LSEEW1:{name:"Large cooling appliances",Au:0,Cu:2,Fe:49,Al:1.4},
+LSEEW2:{name:"Freezers",Au:0,Cu:2,Fe:51,Al:1.4},
+LSEEW3:{name:"Large refrigeration appliances",Au:0,Cu:2,Fe:49,Al:1.4},
+LSEEW4:{name:"Clothes dryers",Au:0,Cu:1,Fe:17,Al:1},
+LSEEW5:{name:"Dish washing machines",Au:0,Cu:4,Fe:55,Al:0},
+LSEEW6:{name:"Electric cookers",Au:0,Cu:0.15,Fe:7.5,Al:5},
+LSEEW7:{name:"Electric stoves",Au:0,Cu:0.15,Fe:19.5,Al:9.5},
+LSEEW8:{name:"Electric hot plates",Au:0,Cu:0.25,Fe:39.5,Al:0.25},
+LSEEW9:{name:"Microwave ovens",Au:0,Cu:0.5,Fe:50,Al:1.5},
+LSEEW10:{name:"Large cooking appliances",Au:0,Cu:1,Fe:42.5,Al:4.5},
+LSEEW11:{name:"Electric heating appliances",Au:0,Cu:2,Fe:40,Al:2},
+LSEEW12:{name:"Electric radiators",Au:0,Cu:2,Fe:41.5,Al:0},
+LSEEW13:{name:"Room heating appliances",Au:0,Cu:2,Fe:43.5,Al:0},
+LSEEW14:{name:"Electric fans",Au:0,Cu:6,Fe:55,Al:5},
+LSEEW15:{name:"Ventilation equipment",Au:0,Cu:3,Fe:50,Al:3},
+LSEEW16:{name:"Vacuum cleaners",Au:0,Cu:0,Fe:2.87,Al:2.5},
+LSEEW17:{name:"Carpet sweepers",Au:0,Cu:1.5,Fe:11,Al:2.5},
+LSEEW18:{name:"Cleaning appliances",Au:0,Cu:1.5,Fe:11,Al:2.5},
+LSEEW19:{name:"Textile processing appliances",Au:0,Cu:1.75,Fe:47.5,Al:2.5},
+LSEEW20:{name:"Ironing appliances",Au:0,Cu:1.5,Fe:47.5,Al:2.5},
+LSEEW21:{name:"Grinders and coffee machines",Au:0,Cu:1.25,Fe:32.5,Al:1.25},
+LSEEW22:{name:"Smoke detector",Au:0,Cu:2,Fe:1,Al:0},
+LSEEW23:{name:"Heating regulators",Au:0,Cu:0.75,Fe:7,Al:0},
+LSEEW24:{name:"Thermostats",Au:0,Cu:0,Fe:27.5,Al:0},
+LSEEW25:{
+name:"Automatic dispensers for hot drinks",
+Au:0,
+Cu:2.5,
+Fe:32.5,
+Al:1.5
+},
+
+LSEEW26:{
+name:"Automatic dispensers for hot and or cold bottles and or cans",
+Au:0,
+Cu:1,
+Fe:32.5,
+Al:3
+},
+
+LSEEW27:{
+name:"Automatic dispensers for solid products",
+Au:0,
+Cu:1,
+Fe:32.5,
+Al:3
+},
+
+LSEEW28:{
+name:"Automatic dispensers for money",
+Au:0,
+Cu:0.1,
+Fe:57.5,
+Al:0.45
+},
+
+LSEEW29:{
+name:"All appliances which deliver automatically all kinds of products",
+Au:0,
+Cu:1,
+Fe:32.5,
+Al:3
+},
+
+LSEEW30:{
+name:"Indoor air purifier",
+Au:0,
+Cu:2,
+Fe:4.5,
+Al:2
+},
+
+LSEEW31:{
+name:"Hair dryer",
+Au:0,
+Cu:0.5,
+Fe:9,
+Al:5
+},
+
+LSEEW32:{
+name:"Electric shaver",
+Au:0,
+Cu:0.1,
+Fe:1.5,
+Al:1
+},
+
+LSEEW33:{
+name:"Electric kettle",
+Au:0,
+Cu:0,
+Fe:41,
+Al:8
+},
+
+LSEEW34:{
+name:"Electronic display",
+Au:0.0004,
+Cu:0.15,
+Fe:24,
+Al:0
+},
+
+EETW1:{name:"Drills",Au:0,Cu:0.75,Fe:37.5,Al:1},
+EETW2:{name:"Saws",Au:0,Cu:0.75,Fe:37.5,Al:1},
+EETW3:{name:"Sewing Machines",Au:0,Cu:1.75,Fe:47.5,Al:2.5},
+EETW4:{name:"Industrial machining equipment",Au:0,Cu:0.15,Fe:55,Al:1.25},
+EETW5:{name:"Riveting / nailing tools",Au:0,Cu:0.75,Fe:37.5,Al:1},
+EETW6:{name:"Welding tools",Au:0,Cu:7,Fe:45,Al:10},
+EETW7:{name:"Liquid spraying equipment",Au:0,Cu:0.5,Fe:9,Al:0.5},
+EETW8:{name:"Gardening equipment",Au:0,Cu:1,Fe:37.5,Al:1},
+
+TLSEW1:{name:"Electrical trains / racing sets",Au:0,Cu:0.02,Fe:6.5,Al:0},
+TLSEW2:{name:"Handheld game consoles",Au:0,Cu:0,Fe:0.2,Al:0},
+TLSEW3:{name:"Video games",Au:0,Cu:0.15,Fe:0.25,Al:0},
+TLSEW4:{name:"Sports computers",Au:0.0004,Cu:0.19,Fe:5,Al:7.5},
+TLSEW5:{name:"Electronic sports equipment",Au:0,Cu:0.15,Fe:12,Al:2.5},
+TLSEW6:{name:"Coin slot machines",Au:0,Cu:0.15,Fe:37.5,Al:2.5},
+
+MDW1:{name:"Radiotherapy equipment",Au:0,Cu:2,Fe:36.5,Al:10},
+MDW2:{name:"Cardiology equipment",Au:0,Cu:1.33,Fe:36.5,Al:6},
+MDW3:{name:"Dialysis equipment",Au:0,Cu:2,Fe:0,Al:8},
+MDW4:{name:"Pulmonary ventilators",Au:0,Cu:0.55,Fe:20,Al:35.67},
+MDW5:{name:"Nuclear medicine equipment",Au:0,Cu:3.5,Fe:36.5,Al:10},
+MDW6:{name:"Laboratory diagnostic equipment",Au:0,Cu:1.2,Fe:0,Al:14.73},
+MDW7:{name:"Analyzers",Au:0,Cu:4.76,Fe:0,Al:8},
+MDW8:{name:"MRI / PET / CT scanners",Au:0,Cu:5.5,Fe:36.5,Al:10},
+MDW9:{name:"Fertilization test equipment",Au:0,Cu:0.5,Fe:0,Al:0.5},
+MDW10:{name:"Medical screening equipment",Au:0,Cu:3.5,Fe:36.5,Al:10},
+
+LIW1:{name:"Gas analyser",Au:0,Cu:7.14,Fe:20,Al:17.86},
+LIW2:{name:"Equipment having electronic components",Au:0,Cu:3.5,Fe:36.5,Al:10}
+
+};
+
+function showItem(){
+
+let code=document.getElementById("code").value
+
+if(data[code]){
+
+document.getElementById("itemName").innerHTML="Item : "+data[code].name
+
+}
+
+}
+
+
+function calculate(){
+
+let qty = parseFloat(document.getElementById("qty").value);
+
+let code = document.getElementById("code").value;
+
+if(!qty || !data[code]) return;
+
+let d = data[code];
+
+// MT recovery
+let Au_MT = qty * (d.Au / 100);
+let Cu_MT = qty * (d.Cu / 100);
+let Fe_MT = qty * (d.Fe / 100);
+let Al_MT = qty * (d.Al / 100);
+
+// KG recovery
+let Au_KG = Au_MT * 1000;
+let Cu_KG = Cu_MT * 1000;
+let Fe_KG = Fe_MT * 1000;
+let Al_KG = Al_MT * 1000;
+
+// show up to 6 decimals
+const format = (n) => Number(n).toFixed(4);
+
+document.getElementById("result").innerHTML = `
+
+<tr>
+<td>Gold (Au)</td>
+<td>${d.Au}%</td>
+<td>${format(Au_MT)}</td>
+<td>${format(Au_KG)}</td>
+</tr>
+
+<tr>
+<td>Copper (Cu)</td>
+<td>${d.Cu}%</td>
+<td>${format(Cu_MT)}</td>
+<td>${format(Cu_KG)}</td>
+</tr>
+
+<tr>
+<td>Iron (Fe)</td>
+<td>${d.Fe}%</td>
+<td>${format(Fe_MT)}</td>
+<td>${format(Fe_KG)}</td>
+</tr>
+
+<tr>
+<td>Aluminium (Al)</td>
+<td>${d.Al}%</td>
+<td>${format(Al_MT)}</td>
+<td>${format(Al_KG)}</td>
+</tr>
+
+`;
+
+}
+
+
+const dropdown = document.getElementById("code");
+
+let count = 1;
+
+Object.keys(data).forEach(code => {
+
+let option = document.createElement("option");
+
+option.value = code;
+option.textContent = count + " - " + code;
+
+dropdown.appendChild(option);
+
+count++;
+
+});
+</script>
+
+</body>
+
+</html>
