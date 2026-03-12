@@ -2,156 +2,134 @@
 <html>
 
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Evergreen Recovery Calculator</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 <style>
-/* LABEL */
-
-label{
-display:block;
-margin-top:18px;
-font-size:14px;
-letter-spacing:0.5px;
-color:#9fffd6;
+*{
+box-sizing:border-box;
 }
 
-/* INPUT FIELD */
-
-#qty{
-
-width:100%;
-padding:14px 16px;
-border-radius:10px;
-
-background:linear-gradient(145deg,#0f2e2a,#0a1f1c);
-
-border:1px solid rgba(0,255,170,0.25);
-
-color:#e8fff8;
-font-size:16px;
-
-box-shadow:
-inset 0 2px 6px rgba(0,0,0,0.7),
-0 0 8px rgba(0,255,170,0.05);
-
-transition:all .25s ease;
-
-}
-
-
-/* INPUT FOCUS */
-
-#qty:focus{
-
-outline:none;
-
-border:1px solid #00ffb3;
-
-box-shadow:
-0 0 10px rgba(0,255,170,0.5),
-inset 0 2px 6px rgba(0,0,0,0.7);
-
-background:linear-gradient(145deg,#123b35,#0b2723);
-
-}
-
-
-/* DROPDOWN */
-
-#code{
-
-width:100%;
-padding:14px 16px;
-border-radius:10px;
-
-background:linear-gradient(145deg,#0f2e2a,#0a1f1c);
-
-border:1px solid rgba(0,255,170,0.25);
-
-color:#e8fff8;
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:
-inset 0 2px 6px rgba(0,0,0,0.7),
-0 0 8px rgba(0,255,170,0.05);
-
-transition:all .25s ease;
-
-}
-
-
-/* DROPDOWN HOVER */
-
-#code:hover{
-
-border:1px solid #00ffb3;
-
-box-shadow:
-0 0 12px rgba(0,255,170,0.4);
-
-}
-
-
-/* DROPDOWN FOCUS */
-
-#code:focus{
-
-outline:none;
-
-border:1px solid #00ffb3;
-
-box-shadow:
-0 0 10px rgba(0,255,170,0.5),
-inset 0 2px 6px rgba(0,0,0,0.7);
-
-}
-
-
-/* OPTION STYLE */
-
-#code option{
-
-background:#0b1c1a;
-color:#c7ffe9;
-
-}
-
-.container{
-
-background:linear-gradient(135deg,#071b18,#0d2e29);
-
-padding:40px;
-
-border-radius:16px;
-
-box-shadow:
-0 0 40px rgba(0,255,170,0.08),
-inset 0 0 20px rgba(0,0,0,0.5);
-
-border:1px solid rgba(0,255,170,0.15);
-
-}
 body{
 background:#0b1c1a;
 font-family:Arial;
 color:white;
 display:flex;
 justify-content:center;
-align-items:center;
-height:100vh;
+align-items:flex-start;
+padding:30px;
+}
+#qty,
+#code{
+
+width:100%;
+
+padding:14px 16px;
+
+border-radius:10px;
+
+background:linear-gradient(145deg,#0e2b27,#061a17);
+
+border:1px solid rgba(0,255,170,0.25);
+
+color:#dffef6;
+
+font-size:15px;
+
+box-shadow:
+inset 0 2px 8px rgba(0,0,0,0.7),
+0 0 10px rgba(0,255,170,0.08);
+
+transition:all .25s ease;
+
 }
 
-.container{
+#qty:focus,
+#code:focus{
 
-width:650px;
+outline:none;
+
+border:1px solid #00ffb3;
+
+background:linear-gradient(145deg,#143b35,#08201c);
+
+box-shadow:
+0 0 12px rgba(0,255,170,0.5),
+inset 0 2px 8px rgba(0,0,0,0.7);
+
+}
+
+#qty::placeholder{
+color:#9ed9c9;
+}
+
+/* dropdown main field */
+
+#code{
+background:#0d2f29;
+color:#bfffe6;
+border:1px solid #00ffb3;
+}
+
+/* dropdown list */
+
+#code option{
+background:#06201c;
+color:#9effd7;
+}
+#historyTable{
+width:100%;
+table-layout:fixed;
+font-size:10px;
+}
+/* selected option highlight */
+#historyTable{
+width:100%;
+border-collapse:collapse;
+}
+
+#historyTable th,
+#historyTable td{
+border:1px solid rgba(0,255,170,0.25); /* thin neon border */
+padding:8px;
+text-align:left;
+}
+
+#historyTable th{
+border-bottom:1px solid rgba(0,255,170,0.35);
+}
+
+#totalRow{
+background:#0b3a33;
+font-weight:bold;
+border-top:1px solid rgba(0,255,170,0.4);
+}
+
+
+#code option:checked{
+background:#0f5f4e;
+color:#ffffff;
+}
+#code{
+scrollbar-color:#00ffb3 #06201c;
+}
+.container{
+width:700px;
 background:#0f2a26;
 padding:35px;
-border-radius:12px;
+border-radius:14px;
 box-shadow:0 0 25px rgba(0,255,156,0.25);
+}
 
+.logo{
+display:flex;
+justify-content:center;
+margin-bottom:10px;
+}
+
+.logo img{
+height:70px;
 }
 
 h2{
@@ -160,157 +138,176 @@ color:#00ff9c;
 margin-bottom:25px;
 }
 
-input,select{
+label{
+display:block;
+margin-top:15px;
+color:#9fffd6;
+}
 
+input,select{
 width:100%;
 padding:12px;
 margin-top:10px;
-border-radius:6px;
+border-radius:8px;
 border:none;
-font-size:16px;
-
-}
-
-.item{
-
-margin-top:12px;
-color:#7df7d3;
-
-}
-
-/* RESULT TABLE */
-
-.resultTable{
-
-margin-top:25px;
-width:100%;
-border-collapse:collapse;
-
-}
-
-.resultTable th{
-
-text-align:left;
-padding:10px;
-color:#00ff9c;
-font-weight:600;
-
-}
-
-.resultTable td{
-
-padding:10px;
-border-top:1px solid rgba(255,255,255,0.08);
-
-}
-
-/* percentage */
-
-.percent{
-
-color:#9cebd3;
-
-}
-
-/* MT badge */
-
-.mt{
-
-background:#143f38;
-padding:4px 10px;
-border-radius:6px;
-color:#9efbd7;
-
-}
-
-/* KG highlight */
-
-.kg{
-
-background:#00ff9c;
-color:black;
-padding:4px 10px;
-border-radius:6px;
-font-weight:600;
-
-}
-/* ===== MOBILE RESPONSIVE ===== */
-
-@media (max-width:768px){
-
-body{
-padding:20px;
-align-items:flex-start;
-height:auto;
-}
-
-.container{
-width:100%;
-max-width:100%;
-padding:25px;
-border-radius:12px;
-}
-
-h2{
-font-size:22px;
-}
-
-label{
-font-size:13px;
-}
-
-#qty,
-#code{
-padding:12px;
 font-size:15px;
 }
 
-.resultTable th,
+/* BUTTONS */
+
+.action-buttons{
+display:none;
+gap:10px;
+margin-top:15px;
+}
+
+.btn{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#00ff9c;
+color:#000;
+font-weight:600;
+cursor:pointer;
+}
+
+.print{
+background:#1e90ff;
+color:white;
+}
+
+/* TABLE CARD */
+
+.table-card{
+display:none;
+border:1px solid rgba(0,255,170,0.25);
+border-radius:12px;
+padding:15px;
+margin-top:20px;
+background:linear-gradient(145deg,#0c2420,#071b18);
+}
+
+/* TABLE */
+
+.resultTable{
+width:100%;
+border-collapse:collapse;
+}
+
+.resultTable th{
+padding:10px;
+color:#00ff9c;
+text-align:left;
+}
+
 .resultTable td{
-padding:8px;
-font-size:14px;
+padding:10px;
+border-top:1px solid rgba(255,255,255,0.1);
 }
 
-.mt,
-.kg{
-font-size:13px;
-padding:3px 8px;
+/* TOTAL ROW */
+
+#totalRow{
+background:#083a32;
+font-weight:bold;
+color:#00ff9c;
 }
 
+.history-title{
+text-align:center;
+color:#00ff9c;
+margin-bottom:10px;
 }
 
-/* ===== SMALL PHONES ===== */
+/* MOBILE */
 
-@media (max-width:480px){
-
-h2{
-font-size:20px;
-}
+@media(max-width:768px){
 
 .container{
-padding:20px;
+width:100%;
 }
 
 .resultTable{
 font-size:13px;
 }
 
-.resultTable th{
-font-size:12px;
 }
 
-.resultTable td{
-font-size:12px;
+/* PRINT */
+@media print{
+
+body{
+background:white;
+color:black;
+font-family:Arial;
 }
 
-.mt,
-.kg{
-display:inline-block;
-margin-top:2px;
+/* hide UI elements */
+
+.logo,
+.input-section,
+.action-buttons,
+.item,
+#resultCard{
+display:none !important;
 }
 
 .item{
-font-size:13px;
+margin-top:18px;
+margin-bottom:10px;
+color:#fd0000;
+font-size:14px;
+letter-spacing:0.4px;
+}
+
+/* show print area */
+
+#printArea{
+display:block !important;
+}
+
+/* heading */
+
+.print-header{
+display:block;
+text-align:center;
+margin-bottom:20px;
+}
+
+.print-header h1{
+color:green;
+font-size:24px;
+margin:0;
+}
+
+.print-header h2{
+font-size:18px;
+margin-top:5px;
+}
+
+/* table styling */
+
+#historyTable{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+#historyTable th,
+#historyTable td{
+border:1px solid black;
+padding:8px;
+}
+
+#historyTable th{
+background:#e8ffe8;
+color:black;
+}
+
+#totalRow{
+font-weight:bold;
+background:#f2f2f2;
 }
 
 }
@@ -322,61 +319,91 @@ font-size:13px;
 
 <div class="container">
 
+<div class="logo">
+<img src="logo.png">
+</div>
+<h2>EverGreen</h2>
+
 <h2>Metal Recovery Calculator</h2>
 
-<div class="input-section">
+<label>Enter Quantity (Metric Ton)</label>
+<input type="number" id="qty" placeholder="Enter MT" oninput="calculate()">
 
-<label class="form-label">Enter Quantity (Metric Ton)</label>
-
-<input 
-type="number"
-id="qty"
-class="input-3d"
-placeholder="Enter MT"
-oninput="calculate()"
->
-
-<label class="form-label">Select Equipment Code</label>
-
-<select 
-id="code"
-class="select-3d"
-onchange="showItem();calculate();"
->
-
+<label>Select Equipment Code</label>
+<select id="code" onchange="showItem();calculate()">
 <option value="">Select Code</option>
-
 </select>
+
+<div class="action-buttons" id="buttons">
+
+<button onclick="addCalculation()" class="btn">
+Add Calculation
+</button>
+
+<button onclick="printReport()" class="btn print">
+Print / Export PDF
+</button>
 
 </div>
 
-<div class="item" id="itemName"></div>
+<div style="margin-top: 15px;" id="itemName"></div>
 
+<!-- RESULT TABLE -->
+
+<div class="table-card" id="resultCard">
 
 <table class="resultTable">
 
 <thead>
-
 <tr>
-
 <th>Metal</th>
 <th>Recovery %</th>
 <th>MT</th>
 <th>KG</th>
-
 </tr>
-
 </thead>
 
-<tbody id="result">
-
-</tbody>
+<tbody id="result"></tbody>
 
 </table>
 
 </div>
 
+<!-- HISTORY -->
+
+<div class="table-card" id="historyCard">
+
+<h3 class="history-title">Calculation History</h3>
+
+<table class="resultTable" id="historyTable">
+
+<thead>
+<tr>
+<th>#</th>
+<th>Code</th>
+<th>Item Name</th>
+<th>Quantity MT</th>
+<th>Gold KG</th>
+<th>Copper KG</th>
+<th>Iron KG</th>
+<th>Aluminium KG</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 <script>
+
+/* ======================
+   DATA OBJECT
+   (PASTE YOUR DATA HERE)
+====================== */
 
 const data = {
 
@@ -565,26 +592,73 @@ LIW2:{name:"Equipment having electronic components",Au:0,Cu:3.5,Fe:36.5,Al:10}
 
 };
 
+
+/* ======================
+   VARIABLES
+====================== */
+
+let totalQty=0;
+let totalGold=0;
+let totalCopper=0;
+let totalIron=0;
+let totalAluminium=0;
+
+let historyCount=1;
+
+/* ======================
+   DROPDOWN POPULATE
+====================== */
+
+const dropdown=document.getElementById("code");
+
+let count=1;
+
+Object.keys(data).forEach(code=>{
+
+let option=document.createElement("option");
+
+option.value=code;
+
+option.textContent=count+" - "+code;
+
+dropdown.appendChild(option);
+
+count++;
+
+});
+
+/* ======================
+   SHOW ITEM NAME
+====================== */
+
 function showItem(){
 
-let code=document.getElementById("code").value
+let code=document.getElementById("code").value;
 
 if(data[code]){
 
-document.getElementById("itemName").innerHTML="Item : "+data[code].name
+document.getElementById("itemName").innerHTML="Item : "+data[code].name;
 
 }
 
 }
 
+/* ======================
+   LIVE CALCULATION
+====================== */
 
 function calculate(){
 
 let qty = parseFloat(document.getElementById("qty").value);
-
 let code = document.getElementById("code").value;
 
 if(!qty || !data[code]) return;
+
+// show result table
+document.getElementById("resultCard").style.display="block";
+
+// show buttons
+document.getElementById("buttons").style.display="flex";
 
 let d = data[code];
 
@@ -600,10 +674,9 @@ let Cu_KG = Cu_MT * 1000;
 let Fe_KG = Fe_MT * 1000;
 let Al_KG = Al_MT * 1000;
 
-// show up to 6 decimals
-const format = (n) => Number(n).toFixed(4);
+const format = (n)=>Number(n).toFixed(4);
 
-document.getElementById("result").innerHTML = `
+document.getElementById("result").innerHTML=`
 
 <tr>
 <td>Gold (Au)</td>
@@ -637,27 +710,93 @@ document.getElementById("result").innerHTML = `
 
 }
 
+/* ======================
+   ADD CALCULATION
+====================== */
 
-const dropdown = document.getElementById("code");
+function addCalculation(){
 
-let count = 1;
+let qty=parseFloat(document.getElementById("qty").value);
 
-Object.keys(data).forEach(code => {
+let code=document.getElementById("code").value;
 
-let option = document.createElement("option");
+if(!qty || !data[code]) return;
 
-option.value = code;
-option.textContent = count + " - " + code;
+let d=data[code];
 
-dropdown.appendChild(option);
+let Au_KG=qty*(d.Au/100)*1000;
+let Cu_KG=qty*(d.Cu/100)*1000;
+let Fe_KG=qty*(d.Fe/100)*1000;
+let Al_KG=qty*(d.Al/100)*1000;
 
-count++;
+const format=(n)=>Number(n).toFixed(4);
 
-});
+totalQty+=qty;
+totalGold+=Au_KG;
+totalCopper+=Cu_KG;
+totalIron+=Fe_KG;
+totalAluminium+=Al_KG;
+
+let table=document.querySelector("#historyTable tbody");
+
+let oldTotal=document.getElementById("totalRow");
+
+if(oldTotal) oldTotal.remove();
+
+/* ADD ROW */
+
+let row=table.insertRow();
+
+row.innerHTML=`
+<td>${historyCount}</td>
+<td>${code}</td>
+<td>${d.name}</td>
+<td>${qty}</td>
+<td>${format(Au_KG)}</td>
+<td>${format(Cu_KG)}</td>
+<td>${format(Fe_KG)}</td>
+<td>${format(Al_KG)}</td>
+`;
+
+historyCount++;
+
+/* TOTAL ROW */
+
+let totalRow=table.insertRow();
+
+totalRow.id="totalRow";
+
+totalRow.innerHTML=`
+<td colspan="3">TOTAL</td>
+<td>${format(totalQty)}</td>
+<td>${format(totalGold)}</td>
+<td>${format(totalCopper)}</td>
+<td>${format(totalIron)}</td>
+<td>${format(totalAluminium)}</td>
+`;
+
+/* SHOW UI */
+
+document.getElementById("buttons").style.display="flex";
+
+document.getElementById("resultCard").style.display="block";
+
+document.getElementById("historyCard").style.display="block";
+
+}
+
+/* ======================
+   PRINT
+====================== */
+
+function printReport(){
+
+window.print();
+
+}
+
 </script>
 
 </body>
 
-
 </html>
-
