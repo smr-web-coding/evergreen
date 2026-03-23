@@ -308,16 +308,41 @@ const totalBankElem=document.getElementById("totalBank");
 const totalCashElem=document.getElementById("totalCash");
 const totalBillExtraElem=document.getElementById("totalBillExtra");
 
-function exportPDF(){
-    const {jsPDF}=window.jspdf;
-    html2canvas(document.getElementById("printArea"),{scale:2}).then(canvas=>{
-        const pdf=new jsPDF("p","mm","a4");
-        const img=canvas.toDataURL("image/png");
-        const w=210;
-        const h=(canvas.height*w)/canvas.width;
-        pdf.addImage(img,"PNG",0,0,w,h);
-        pdf.save("Cash-Bill-Settlement.pdf");
-    });
+async function exportPDF(){
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 10;
+    let y = margin;
+
+    const elements = [
+        document.querySelector("h2"),
+        ...document.querySelectorAll(".invoice"),
+        document.querySelector(".totals")
+    ];
+
+    for (let i = 0; i < elements.length; i++) {
+        const canvas = await html2canvas(elements[i], {
+            scale: 1.5,
+            useCORS: true
+        });
+
+        const imgData = canvas.toDataURL("image/jpeg", 0.75);
+        const imgWidth = pageWidth - margin * 2;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if (y + imgHeight > pageHeight - margin) {
+            pdf.addPage();
+            y = margin;
+        }
+
+        pdf.addImage(imgData, "JPEG", margin, y, imgWidth, imgHeight);
+        y += imgHeight + 6;
+    }
+
+    pdf.save("Cash-Bill-Settlement.pdf");
 }
 
 addInvoice();
