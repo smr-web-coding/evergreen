@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cash & Bill Settlement</title>
+
+<!-- jsPDF + html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    padding:15px;
+}
+.container{
+    max-width:1100px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.3);
+}
+h2{
+    text-align:center;
+    color:#1b4332;
+    margin-bottom:15px;
+}
+.invoice{
+    background:#f8fbfa;
+    border:1px solid #cce3de;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:20px;
+}
+.inv-header{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:end;
+}
+.inv-header input{
+    max-width:180px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:12px;
+}
+label{
+    font-size:14px;
+    font-weight:600;
+}
+input, select{
+    width:100%;
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+.results{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+.box{
+    background:#fff;
+    padding:12px;
+    border-radius:8px;
+    font-size:14px;
+}
+.cash{border-left:5px solid #2d6a4f;}
+.bank{border-left:5px solid #1d3557;}
+.extra{border-left:5px solid #f4a261;}
+.collect{
+    grid-column:span 3;
+    font-size:16px;
+    font-weight:bold;
+    background:#e9f5f2;
+}
+.remove{
+    background:#e63946;
+    color:#fff;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+.add{
+    background:#2d6a4f;
+    color:#fff;
+    border:none;
+    padding:12px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-bottom:15px;
+}
+.totals{
+    background:#e9f5f2;
+    padding:15px;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    font-size:18px;
+    font-weight:bold;
+    flex-wrap:wrap;
+}
+.pdf{
+    background:#1b4332;
+    color:#fff;
+    border:none;
+    padding:12px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    width:100%;
+    margin-top:15px;
+}
+
+/* Mobile */
+@media(max-width:768px){
+    .grid{grid-template-columns:1fr;}
+    .results{grid-template-columns:1fr;}
+    .collect{grid-column:span 1;}
+    .totals{font-size:16px; gap:10px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="printArea">
+<h2>Cash & Bill Settlement</h2>
+
+<div id="invoiceContainer"></div>
+
+<button class="add" onclick="addInvoice()">➕ Add Invoice</button>
+
+<div class="totals">
+    <div>🏦 Total Current A/c: ₹ <span id="totalBank">0.00</span></div>
+    <div>💰 Total Cash to Collect: ₹ <span id="totalCash">0.00</span></div>
+</div>
+
+<button class="pdf" onclick="exportPDF()">📄 Export PDF</button>
+</div>
+
+<script>
+function addInvoice(){
+    const div=document.createElement("div");
+    div.className="invoice";
+    div.innerHTML=`
+    <div class="inv-header">
+        <div>
+            <label>Invoice / Ref No</label>
+            <input type="text" placeholder="Optional">
+        </div>
+        <div>
+            <label>Date</label>
+            <input type="date">
+        </div>
+        <button class="remove" onclick="this.closest('.invoice').remove();calcAll()">✖</button>
+    </div>
+
+    <div class="grid">
+        <div><label>Qty (KG)</label><input type="number" oninput="calcAll()"></div>
+        <div><label>Cash Rate</label><input type="number" oninput="calcAll()"></div>
+        <div><label>Bill Rate</label><input type="number" oninput="calcAll()"></div>
+        <div>
+            <label class="billLabel">Bill % on Cash (7%)</label>
+            <select onchange="calcAll()">
+                <option value="7">7%</option>
+                <option value="8">8%</option>
+                <option value="9">9%</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="results">
+        <div class="box cash">💵 Cash Deal Amount: ₹ <span class="cashDeal">0.00</span></div>
+        <div class="box bank">📄 Bill Value (Incl. 18% GST): ₹ <span class="billTotal">0.00</span></div>
+        <div class="box extra">📊 <span class="billPctText">Bill % (7%)</span>: ₹ <span class="billExtra">0.00</span></div>
+        <div class="box collect">💰 Cash to Collect: ₹ <span class="cashCollect">0.00</span></div>
+    </div>`;
+    document.getElementById("invoiceContainer").appendChild(div);
+}
+
+function calcAll(){
+    let totalBank=0, totalCash=0;
+
+    document.querySelectorAll(".invoice").forEach(inv=>{
+        let inputs=inv.querySelectorAll("input,select");
+
+        let qty=+inputs[2].value||0;
+        let cashRate=+inputs[3].value||0;
+        let billRate=+inputs[4].value||0;
+        let pct=+inputs[5].value||0;
+
+        inv.querySelector(".billLabel").innerText=`Bill % on Cash (${pct}%)`;
+        inv.querySelector(".billPctText").innerText=`Bill % (${pct}%)`;
+
+        let cash=qty*cashRate;
+        let billBase=qty*billRate;
+        let billTotal=billBase*1.18;
+        let billExtra=billBase*pct/100;
+        let cashCollect=(cash+billExtra)-billTotal;
+
+        inv.querySelector(".cashDeal").innerText=cash.toFixed(2);
+        inv.querySelector(".billTotal").innerText=billTotal.toFixed(2);
+        inv.querySelector(".billExtra").innerText=billExtra.toFixed(2);
+        inv.querySelector(".cashCollect").innerText=cashCollect.toFixed(2);
+
+        totalBank+=billTotal;
+        totalCash+=cashCollect;
+    });
+
+    document.getElementById("totalBank").innerText=totalBank.toFixed(2);
+    document.getElementById("totalCash").innerText=totalCash.toFixed(2);
+}
+
+function exportPDF(){
+    const {jsPDF}=window.jspdf;
+    html2canvas(document.getElementById("printArea"),{scale:2}).then(canvas=>{
+        let pdf=new jsPDF("p","mm","a4");
+        let imgData=canvas.toDataURL("image/png");
+        let imgWidth=210;
+        let imgHeight=(canvas.height*imgWidth)/canvas.width;
+        pdf.addImage(imgData,"PNG",0,0,imgWidth,imgHeight);
+        pdf.save("Cash-Bill-Settlement.pdf");
+    });
+}
+
+addInvoice();
+</script>
+
+</body>
+</html>
